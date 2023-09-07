@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	cors "github.com/itsjamie/gin-cors"
+	
 )
 
 func main() {
@@ -25,16 +25,7 @@ func main() {
 		log.Panicf("error: %s", err)
 	}
 
-	router.Use(cors.Middleware(cors.Config{
-		Origins:         "*",
-		Methods:         "GET",
-		RequestHeaders:  "Origin, Authorization, Content-Type",
-		ExposedHeaders:  "",
-		MaxAge:          50 * time.Second,
-		Credentials:     false,
-		ValidateHeaders: false,
-	}))
-
+	router.Use(CORS())
 }
 
 type data struct {
@@ -72,6 +63,6 @@ func getJson(c *gin.Context) {
 
 	response.StatusCode = c.Writer.Status()
 
-	c.IndentedJSON(http.StatusAccepted, response)
+	c.IndentedJSON(http.StatusOK, response)
 
 }
