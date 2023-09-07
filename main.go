@@ -1,7 +1,10 @@
 package main
 
 import (
+	"fmt"
+	"log"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -9,21 +12,29 @@ import (
 )
 
 func main() {
+	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
 	router.GET("api/", getJson)
 
+	port := os.Getenv("PORT")
+	fmt.Println()
+	if port == "" {
+		port = "8080"
+	}
+
+	if err := router.Run(":" + port); err != nil {
+		log.Panicf("error: %s", err)
+	}
+
 	router.Use(cors.Middleware(cors.Config{
-		Origins:        "*",
-		Methods:        "GET",
-		RequestHeaders: "Origin, Authorization, Content-Type",
-		ExposedHeaders: "",
-		MaxAge: 50 * time.Second,
-		Credentials: false,
+		Origins:         "*",
+		Methods:         "GET",
+		RequestHeaders:  "Origin, Authorization, Content-Type",
+		ExposedHeaders:  "",
+		MaxAge:          50 * time.Second,
+		Credentials:     false,
 		ValidateHeaders: false,
 	}))
-
-
-	router.Run("localhost:9090")
 
 }
 
@@ -36,7 +47,6 @@ type data struct {
 	GithubRepoUrl string `json:"github_repo_url"`
 	StatusCode    int    `json:"status_code"`
 }
-
 
 func getJson(c *gin.Context) {
 	var response data
