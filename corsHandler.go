@@ -4,7 +4,7 @@ import "github.com/gin-gonic/gin"
 
 func CORS() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		//allow local host 3000 and production url
+		
 		c.Writer.Header().Set("Access-Control-Allow-Origin", "*")
 		c.Writer.Header().Set("Access-Control-Allow-Credentials", "true")
 		c.Writer.Header().Set("Access-Control-Allow-Headers", "Content-Type, Content-Length, Accept-Encoding, accept, origin, Cache-Control, X-Requested-With, X-CSRF-Token, Authorization")
