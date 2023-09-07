@@ -1,16 +1,16 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 	"time"
-
 	"github.com/gin-gonic/gin"
+
 )
 
 func main() {
 	router := gin.Default()
 	router.GET("api/", getJson)
+
 
 	router.Run("localhost:9090")
 
@@ -23,33 +23,35 @@ type data struct {
 	Track         string `json:"track"`
 	GithubFileUrl string `json:"github_file_url"`
 	GithubRepoUrl string `json:"github_repo_url"`
-	StatusCode    string `json:"status_code"`
+	StatusCode    int    `json:"status_code"`
 }
 
-// type ctime struct {
-// 	Time string `json:"time"`
-// }
 
-func getJson(c *gin.Context){
+func getJson(c *gin.Context) {
+	var response data
+
 	utc_time := time.Now()
-	weekday := utc_time.Format("Monday")
 
+	response.UtcTime = utc_time.Format(time.RFC3339)
+	response.CurrentDay = utc_time.Format("Monday")
 
-	slack_name := c.DefaultQuery("slack_name","")
-	track := c.DefaultQuery("track","")
+	slack_name := c.DefaultQuery("slack_name", "")
+	track := c.DefaultQuery("track", "")
 
-	if slack_name == "" || track == ""{
-		c.JSON(http.StatusBadRequest,gin.H{
-			"error" : "Missing or invalid query parameters"
+	if slack_name == "" || track == "" {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": "Missing or invalid query parameters",
 		})
 	}
-	
-	file_url := ""
 
-	
+	response.SlackName = slack_name
+	response.Track = track
 
-	fmt.Println(slack_name)
+	response.GithubFileUrl = "https://github.com/JerryAgbesi/HNGX--GET-endpoint/blob/main/main.go"
+	response.GithubRepoUrl = "https://github.com/JerryAgbesi/HNGX--GET-endpoint"
 
-	c.IndentedJSON(http.StatusAccepted,weekday)
+	response.StatusCode = c.Writer.Status()
+
+	c.IndentedJSON(http.StatusAccepted, response)
 
 }
