@@ -3,13 +3,24 @@ package main
 import (
 	"net/http"
 	"time"
-	"github.com/gin-gonic/gin"
 
+	"github.com/gin-gonic/gin"
+	cors "github.com/itsjamie/gin-cors"
 )
 
 func main() {
 	router := gin.Default()
 	router.GET("api/", getJson)
+
+	router.Use(cors.Middleware(cors.Config{
+		Origins:        "*",
+		Methods:        "GET",
+		RequestHeaders: "Origin, Authorization, Content-Type",
+		ExposedHeaders: "",
+		MaxAge: 50 * time.Second,
+		Credentials: false,
+		ValidateHeaders: false,
+	}))
 
 
 	router.Run("localhost:9090")
