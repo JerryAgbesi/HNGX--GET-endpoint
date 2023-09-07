@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -17,7 +16,7 @@ func main() {
 	router.GET("api/", getJson)
 
 	port := os.Getenv("PORT")
-	fmt.Println()
+
 	if port == "" {
 		port = "8080"
 	}
@@ -54,7 +53,7 @@ func getJson(c *gin.Context) {
 	utc_time := time.Now()
 
 	response.UtcTime = utc_time.Format(time.RFC3339)
-	response.CurrentDay = utc_time.Format("Monday")
+	response.CurrentDay = utc_time.Format("Monday") //Specify for format for weekday strings
 
 	slack_name := c.DefaultQuery("slack_name", "")
 	track := c.DefaultQuery("track", "")
