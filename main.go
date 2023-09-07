@@ -15,6 +15,16 @@ func main() {
 	router := gin.Default()
 	router.GET("api/", getJson)
 
+	config := cors.DefaultConfig()
+    config.AllowAllOrigins = true
+    config.AllowMethods = []string{"POST", "GET", "PUT", "OPTIONS"}
+    config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "Accept", "User-Agent", "Cache-Control", "Pragma"}
+    config.ExposeHeaders = []string{"Content-Length"}
+    config.AllowCredentials = true
+    config.MaxAge = 12 * time.Hour
+
+    router.Use(cors.New(config))
+
 	port := os.Getenv("PORT")
 
 	if port == "" {
@@ -25,15 +35,7 @@ func main() {
 		log.Panicf("error: %s", err)
 	}
 
-	config := cors.DefaultConfig()
-    config.AllowAllOrigins = true
-    config.AllowMethods = []string{"POST", "GET", "PUT", "OPTIONS"}
-    config.AllowHeaders = []string{"Origin", "Content-Type", "Authorization", "Accept", "User-Agent", "Cache-Control", "Pragma"}
-    config.ExposeHeaders = []string{"Content-Length"}
-    config.AllowCredentials = true
-    config.MaxAge = 12 * time.Hour
-
-    router.Use(cors.New(config))
+	
 
 }
 
