@@ -12,6 +12,8 @@ import (
 func main() {
 	gin.SetMode(gin.ReleaseMode)
 	router := gin.Default()
+	router.Use(CORS())
+
 	router.GET("api/", getJson)
 
 	// config := cors.DefaultConfig()
@@ -22,8 +24,7 @@ func main() {
     // config.AllowCredentials = true
     // config.MaxAge = 12 * time.Hour
 
-    router.Use(CORS())
-
+    
 	port := os.Getenv("PORT")
 
 	if port == "" {
